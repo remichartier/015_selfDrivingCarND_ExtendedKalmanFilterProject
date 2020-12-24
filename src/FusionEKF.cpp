@@ -10,6 +10,12 @@ using std::endl;
 using std::vector;
 
 /**
+* History
+* v0 : init H_laser_ matrix 
+*/
+
+
+/**
  * Constructor.
  */
 FusionEKF::FusionEKF() {
@@ -23,6 +29,11 @@ FusionEKF::FusionEKF() {
   H_laser_ = MatrixXd(2, 4);
   Hj_ = MatrixXd(3, 4);
 
+  /* No Need to Tune Parameters
+  *  • The R matrix values and Q noise values are provided for you. 
+  *  There is no need to tune these parameters for this project.
+  */
+  
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
               0, 0.0225;
@@ -36,7 +47,9 @@ FusionEKF::FusionEKF() {
    * TODO: Finish initializing the FusionEKF.
    * TODO: Set the process and measurement noises
    */
-
+  // initialize variables and matrices (x, F, H_laser, H_jacobian, P, etc.)
+  H_laser_ << 1,0,0,0
+    		  0,1,0,0;
 
 }
 
