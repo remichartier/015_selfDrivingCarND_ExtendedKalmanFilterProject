@@ -16,7 +16,7 @@ using std::vector;
  *		Matrix F and Q. Call Update() functions for Radar or Laser
  *		Remaining to check if "initialize variables and matrices 
  *		(x, F, H_laser, H_jacobian, P, etc.)" complete ?
- * v01 : 
+ * v01 : Initialization Hj_
  */
 
 
@@ -185,6 +185,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+    
+    // Calculate Jacobian Matrix first for Radar
+    Tools tools;
+    Hj_ = tools.CalculateJacobian(ekf_.x_);
+    
     // TODO: Radar updates
     // void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	ekf_.UpdateEKF(measurement_pack.raw_measurements_);
