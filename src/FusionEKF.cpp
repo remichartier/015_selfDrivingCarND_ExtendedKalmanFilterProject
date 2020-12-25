@@ -49,7 +49,7 @@ FusionEKF::FusionEKF() {
    * TODO: Set the process and measurement noises
    */
   // initialize variables and matrices (x, F, H_laser, H_jacobian, P, etc.)
-  H_laser_ << 1,0,0,0
+  H_laser_ << 1,0,0,0,
     		  0,1,0,0;
 
 }
@@ -85,13 +85,25 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
 	  float rho_measured 	= measurement_pack.raw_measurements_[0];
       float phi_measured 	= measurement_pack.raw_measurements_[1];
-      float rhodot_measured = measurement_pack.raw_measurements_[2];
+      /* below is commented due to comment below indicating useless to get vx/vy
+      * from rhodot_measured
+      */
+      // float rhodot_measured = measurement_pack.raw_measurements_[2];
       
       
       ekf_.x_[0] = rho_measured * cos(phi_measured); // conversion to px = cos(phi) * rho
       ekf_.x_[1] = -rho_measured * sin(phi_measured); // converstion to py = -sin(phi) * rho
-      ekf_.x_[2] = rhodot_measured * cos(phi_measured); // conversion to vx = cos(phi) * rhodot_measured
-      ekf_.x_[3] = -rhodot_measured * sin(phi_measured); // conversion to vy = -sin(phi) * rhodot_measured
+
+      
+      /* Although radar gives velocity data in the form of the range rate \dot{\rho} ρ, a radar 
+      * measurement does not contain enough information to determine the state variable velocities vx
+      * and vy. You can, however, use the radar measurements \rhoρ and \phiϕ to initialize 
+      * the state variable locations px and py.
+      */
+      // ekf_.x_[2] = rhodot_measured * cos(phi_measured); // conversion to vx = cos(phi) * rhodot_measured
+      // ekf_.x_[3] = -rhodot_measured * sin(phi_measured); // conversion to vy = -sin(phi) * rhodot_measured
+      ekf_.x_[2] = 0;
+      ekf_.x_[3] = 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
