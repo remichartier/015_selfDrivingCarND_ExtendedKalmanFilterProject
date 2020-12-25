@@ -100,16 +100,16 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
        * x_groundtruth, y_groundtruth, vx_groundtruth, vy_groundtruth, 
        * yaw_groundtruth, yawrate_groundtruth.
        */
-	  float rho_measured 	= measurement_pack.raw_measurements_[0];
-      float phi_measured 	= measurement_pack.raw_measurements_[1];
+	  float rho_measured 	= measurement_pack.raw_measurements_(0);
+      float phi_measured 	= measurement_pack.raw_measurements_(1);
       /**
        * below is commented due to comment below indicating useless to get vx/vy
        * from rhodot_measured
        */
       // float rhodot_measured = measurement_pack.raw_measurements_[2];      
       
-      ekf_.x_[0] = rho_measured * cos(phi_measured); // conversion to px = cos(phi) * rho
-      ekf_.x_[1] = -rho_measured * sin(phi_measured); // converstion to py = -sin(phi) * rho
+      ekf_.x_(0) = rho_measured * cos(phi_measured); // conversion to px = cos(phi) * rho
+      ekf_.x_(1) = -rho_measured * sin(phi_measured); // converstion to py = -sin(phi) * rho
 
       /**
        *Although radar gives velocity data in the form of the range rate \dot{\rho} ρ, a radar 
@@ -119,8 +119,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
        */
       // ekf_.x_[2] = rhodot_measured * cos(phi_measured); // conversion to vx = cos(phi) * rhodot_measured
       // ekf_.x_[3] = -rhodot_measured * sin(phi_measured); // conversion to vy = -sin(phi) * rhodot_measured
-      ekf_.x_[2] = 0;
-      ekf_.x_[3] = 0;
+      ekf_.x_(2) = 0;
+      ekf_.x_(3) = 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
@@ -129,10 +129,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
        * y_measured, timestamp, x_groundtruth, y_groundtruth, vx_groundtruth, 
        * vy_groundtruth, yaw_groundtruth, yawrate_groundtruth.
        */
-	  ekf_.x_[0] = measurement_pack.raw_measurements_[0]; // px
-      ekf_.x_[1] = measurement_pack.raw_measurements_[1]; // py
-      ekf_.x_[2] = 0; // vx
-      ekf_.x_[3] = 0; // vy
+	  ekf_.x_(0) = measurement_pack.raw_measurements_(0); // px
+      ekf_.x_(1) = measurement_pack.raw_measurements_(1); // py
+      ekf_.x_(2) = 0; // vx
+      ekf_.x_(3) = 0; // vy
     }
 
     // previous timestamp
