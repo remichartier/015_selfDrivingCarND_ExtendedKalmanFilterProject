@@ -16,7 +16,7 @@ using std::vector;
  *		Matrix F and Q. Call Update() functions for Radar or Laser
  *		Remaining to check if "initialize variables and matrices 
  *		(x, F, H_laser, H_jacobian, P, etc.)" complete ?
- * v01 : Initialization Hj_
+ * v01 : Initialization Hj_, P_ matrix
  */
 
 
@@ -56,6 +56,17 @@ FusionEKF::FusionEKF() {
   // initialize variables and matrices (x, F, H_laser, H_jacobian, P, etc.)
   H_laser_ << 1,0,0,0,
     		  0,1,0,0;
+  
+  /**
+   * For P : State Covariance Matrix :
+   * No info on state deviations --> I initialize to very large deviations
+   */
+  ekf_.P_ = MatrixXd(4, 4);
+  ekf_.P_ << 1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1000, 0,
+            0, 0, 0, 1000;
+  
 
 }
 
