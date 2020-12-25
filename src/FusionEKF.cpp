@@ -13,6 +13,7 @@ using std::vector;
 /**
  * History
  * v0 : init H_laser_ matrix, initial x state, previous_timestamp
+ *		Matrix F and Q.
  */
 
 
