@@ -5,7 +5,7 @@ using Eigen::VectorXd;
 
 /* 
  * History 
- * v01 : implement Predict()
+ * v01 : implement Predict(), Update(), UpdateEKF()
  */
 
 
@@ -57,4 +57,49 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
    * TODO: update the state by using Extended Kalman Filter equations
    */
+  // VectorXd y = z - H_ * x_;
+  // For Radar : y=z−h(x′).y=z−Hx′ becomes y=z−h(x′).
+  // Calculation hxprime, assuming H_ is Hj.
+  VectorXd hxprime = VectorXd(3);
+  float px = x_(0), py = x_(1), vx = x_(2), vy = x_(3);
+  hxprime(0) = sqrt((px*px) + (py*py));
+  // check division by zero
+  if (fabs(px) < 0.0001) {
+    std::cout << "UpdateEKF() - Error - px : Division by Zero" << std::endl;
+    hxprime(0) = 0 ;
+  }
+  else {
+    hxprime(1) = atan2(py/px);
+  }
+  
+  /**
+   * Tips/tricks : 
+   * The resulting angle phi in the y vector should be adjusted so that it is between -pi and pi. 
+   * The Kalman filter is expecting small angle values between the range -pi and pi. 
+   * HINT: when working in radians, you can add 2\pi2π or subtract 2\pi2π until the angle is within
+   * the desired range.
+   * I will do phi = ((phi + pi) % (2*pi)) - pi
+   */
+  hxprime(1) = ((hxprime(1) + pi) % (2*pi)) - pi;
+  
+  // check division by zero
+  if ((fabs(hxprime(0)) < 0.0001) {
+    std::cout << "UpdateEKF() - Error - hxprime(2) : Division by Zero" << std::endl;
+    hxprime(2) = 0 ;
+  }
+  else {
+    hxprime(2) = ((px*vx) + (py*vy)) / hxprime(0);
+  }
+  
+  // Now can apply normal EKF equations
+  VectorXd y = z − hxprime ;
+  MatrixXd Ht = H_.transpose();
+  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd Si = S.inverse();
+  MatrixXd K =  P_ * Ht * Si;
+  MatrixXd I = MatrixXd::Identity(4, 4);
+
+  // new state
+  x_ = x_ + (K * y);
+  P_ = (I - K * H_) * P_;
 }
