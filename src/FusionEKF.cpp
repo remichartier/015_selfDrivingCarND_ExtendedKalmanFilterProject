@@ -79,6 +79,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   /**
    * Initialization
    */
+  /////////////////////////////////
+  //cout << "--> in ProcessMeasurement()" << endl;
   if (!is_initialized_) {
     /**
      * TODO: Initialize the state ekf_.x_ with the first measurement.
@@ -92,6 +94,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     ekf_.x_ << 1, 1, 1, 1;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+      /////////////////////////////////
+  	  //cout << "if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {" << endl;
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
       /**
@@ -123,6 +127,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       ekf_.x_(3) = 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+      /////////////////////////////////
+  	  //cout << "if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {" << endl;
       // TODO: Initialize state.
       /**
        * For a row containing lidar data, the columns are: sensor_type, x_measured, 
@@ -140,6 +146,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     
     // done initializing, no need to predict or update
     is_initialized_ = true;
+    /////////////////////////////////
+  	//cout << "<-- out ProcessMeasurement(first init)" << endl;
     return;
   }
 
@@ -153,7 +161,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    * TODO: Update the process noise covariance matrix.
    * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
-  
+  /////////////////////////////////
+  //cout << "Calculation F_ and Q_" << endl;
   // compute the time elapsed between the current and previous measurements
   // big number in the timestamp variable is # of microseconds elapsed since Jan 1 1970.
   // dt - expressed in seconds
@@ -182,8 +191,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
          0, dt_4/4*noise_ay, 0, dt_3/2*noise_ay,
          dt_3/2*noise_ax, 0, dt_2*noise_ax, 0,
          0, dt_3/2*noise_ay, 0, dt_2*noise_ay;
-
+  /////////////////////////////////
+  //cout << "Call ekf_.Predict()" << endl;
   ekf_.Predict();
+  /////////////////////////////////
+  //cout << "Exit ekf_.Predict()" << endl;
 
   /**
    * Update
@@ -196,14 +208,19 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    
+    /////////////////////////////////
+    //cout << "Update : if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {" << endl;
     // Calculate Jacobian Matrix first for Radar
     Tools tools;
     Hj_ = tools.CalculateJacobian(ekf_.x_);
     
     // TODO: Radar updates
     // void KalmanFilter::UpdateEKF(const VectorXd &z) {
+    /////////////////////////////////
+    cout << "Call  : ekf_.UpdateEKF(measurement_pack.raw_measurements_);" << endl;
 	ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    /////////////////////////////////
+    cout << "Exit  : ekf_.UpdateEKF(measurement_pack.raw_measurements_);" << endl;
   } else {
     // TODO: Laser updates
         
@@ -213,10 +230,16 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // which is a VectorXd(2) for px, py if representing 2D vector z
     // --> pass it to KalmanFilter::Update()
 	// void KalmanFilter::Update(const VectorXd &z) {
+    /////////////////////////////////
+    //cout << "Call  : ekf_.Update(measurement_pack.raw_measurements_);" << endl;
     ekf_.Update(measurement_pack.raw_measurements_);
+    /////////////////////////////////
+    //cout << "Exit  : ekf_.Update(measurement_pack.raw_measurements_);" << endl;
   }
 
   // print the output
   cout << "x_ = " << ekf_.x_ << endl;
   cout << "P_ = " << ekf_.P_ << endl;
+  /////////////////////////////////
+  cout << "<-- out ProcessMeasurement()" << endl;
 }

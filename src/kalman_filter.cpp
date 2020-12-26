@@ -45,16 +45,16 @@ void KalmanFilter::Update(const VectorXd &z) {
   /**
    * TODO: update the state by using Kalman Filter equations
    */
-  VectorXd y = z - H_ * x_;
+  VectorXd y = z - H_*x_;
   MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd S = H_*P_*Ht + R_;
   MatrixXd Si = S.inverse();
-  MatrixXd K =  P_ * Ht * Si;
+  MatrixXd K =  P_*Ht*Si;
   MatrixXd I = MatrixXd::Identity(4, 4);
 
   // new state
-  x_ = x_ + (K * y);
-  P_ = (I - K * H_) * P_;
+  x_ = x_ + (K*y);
+  P_ = (I - K*H_)*P_;
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -64,6 +64,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   // VectorXd y = z - H_ * x_;
   // For Radar : y=z−h(x′).y=z−Hx′ becomes y=z−h(x′).
   // Calculation hxprime, assuming H_ is Hj.
+  
+  
   VectorXd hxprime = VectorXd(3);
   float px(x_(0)), py(x_(1)), vx(x_(2)), vy(x_(3));
   hxprime(0) = sqrt((px*px) + (py*py));
@@ -83,6 +85,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
    * the desired range.
    * I will do phi = ((phi + pi) % (2*pi)) - pi
    */
+  
   while( (hxprime(1) < -M_PI) || (hxprime(1)> M_PI)){
   	if(hxprime(1) < -M_PI){
       hxprime(1) += 2*M_PI;
@@ -102,14 +105,18 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   }
   
   // Now can apply normal EKF equations
+  /////////////////////////////////
+  cout << "Apply EKF equations" << endl;
   VectorXd y = z - hxprime;
   MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd S = H_*P_*Ht + R_;
   MatrixXd Si = S.inverse();
-  MatrixXd K =  P_ * Ht * Si;
+  MatrixXd K =  P_*Ht*Si;
   MatrixXd I = MatrixXd::Identity(4, 4);
 
   // new state
-  x_ = x_ + (K * y);
-  P_ = (I - K * H_) * P_;
+  /////////////////////////////////
+  cout << "Calculate new state" << endl;
+  x_ = x_ + (K*y);
+  P_ = (I - K*H_)*P_;
 }
