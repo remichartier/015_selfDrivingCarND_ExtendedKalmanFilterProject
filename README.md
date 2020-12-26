@@ -1,7 +1,7 @@
 # Extended Kalman Filter Project Starter Code
 Self-Driving Car Engineer Nanodegree Program
 
-In this project you will utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements. Passing the project requires obtaining RMSE values that are lower than the tolerance outlined in the project rubric. 
+In this project we are using a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements. Passing the project requires obtaining RMSE values that are lower than the tolerance outlined in the project rubric. 
 
 This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
 
@@ -15,11 +15,11 @@ Once the install for uWebSocketIO is complete, the main program can be built and
 4. make
 5. ./ExtendedKF
 
-Tips for setting up your environment can be found in the classroom lesson for this project.
+Tips for setting up the environment can be found in the classroom lesson for this project.
 
-Note that the programs that need to be written to accomplish the project are src/FusionEKF.cpp, src/FusionEKF.h, kalman_filter.cpp, kalman_filter.h, tools.cpp, and tools.h
+Note that the programs that need to be written to accomplish the project are src/FusionEKF.cpp, kalman_filter.cpp, and tools.cpp
 
-The program main.cpp has already been filled out, but feel free to modify it.
+The program main.cpp has already been filled out.
 
 Here is the main protocol that main.cpp uses for uWebSocketIO in communicating with the simulator.
 
@@ -78,13 +78,13 @@ Please (do your best to) stick to [Google's C++ style guide](https://google.gith
 
 This is optional!
 
-If you'd like to generate your own radar and lidar data, see the
+If looking at generating own radar and lidar data, see the
 [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
 Matlab scripts that can generate additional data.
 
 ## Project Instructions and Rubric
 
-Note: regardless of the changes you make, your project must be buildable using
+Note: regardless of the changes made, the project must be buildable using
 cmake and make!
 
 More information is only accessible by people who are already enrolled in Term 2
