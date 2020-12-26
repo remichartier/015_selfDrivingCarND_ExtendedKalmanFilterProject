@@ -112,8 +112,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
        */
       // float rhodot_measured = measurement_pack.raw_measurements_[2];      
       
-      ekf_.x_(0) = rho_measured * cos(phi_measured); // conversion to px = cos(phi) * rho
-      ekf_.x_(1) = -rho_measured * sin(phi_measured); // converstion to py = -sin(phi) * rho
+      //ekf_.x_(0) = rho_measured * cos(phi_measured); // conversion to px = cos(phi) * rho
+      //ekf_.x_(1) = -rho_measured * sin(phi_measured); // converstion to py = -sin(phi) * rho
+      ekf_.x_(0) = rho_measured * cos(-phi_measured); // conversion to px = cos(phi) * rho
+      ekf_.x_(1) = rho_measured * sin(-phi_measured); // converstion to py = -sin(phi) * rho
 
       /**
        *Although radar gives velocity data in the form of the range rate \dot{\rho} ρ, a radar 

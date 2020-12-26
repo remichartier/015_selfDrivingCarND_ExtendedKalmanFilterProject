@@ -49,7 +49,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
   // Your px, py, vx, and vy RMSE should be less than or equal to the values 
   // [.11, .11, 0.52,0.52, 0.52]
-  //if ((rmse(0)>.11) || (rmse(0)>.11) || (rmse(0)>.11) || (rmse(0)>.11)){
+  //if ((rmse(0)>.11) || (rmse(1)>.11) || (rmse(2)>.52) || (rmse(3)>.52)){
   //  std::cout << "rmse --> " << rmse << std::endl;
   //}
 

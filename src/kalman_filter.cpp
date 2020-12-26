@@ -11,6 +11,7 @@ using std::endl;
  * History 
  * v01 : implement Predict(), Update(), UpdateEKF(), fix build errors
  * v02 : first "working" version
+ * v03 : fix y between -Pi and Pi
  */
 
 
@@ -73,27 +74,12 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   // check division by zero
   if (fabs(px) < 0.0001) {
     cout << "UpdateEKF() - Error - px : Division by Zero" << endl;
-    hxprime(0) = 0 ;
+    hxprime(1) = M_PI/2 ;
   }
   else {
     hxprime(1) = atan2(py,px);
-  }
-  
-  /**
-   * Tips/tricks : 
-   * The resulting angle phi in the y vector should be adjusted so that it is between -pi   and pi.   * The Kalman filter is expecting small angle values between the range -pi and pi. 
-   * HINT: when working in radians, you can add 2\pi2π or subtract 2\pi2π until the angle is within
-   * the desired range.
-   * I will do phi = ((phi + pi) % (2*pi)) - pi
-   */
-  
-  while( (hxprime(1) < -M_PI) || (hxprime(1)> M_PI)){
-  	if(hxprime(1) < -M_PI){
-      hxprime(1) += 2*M_PI;
-    }
-    else{
-      hxprime(1) -= 2*M_PI;
-    }
+    // Angles are inversed in our system
+    //hxprime(1) = -atan2(py,px);
   }
   
   // check division by zero
@@ -108,6 +94,30 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   // Now can apply normal EKF equations
 
   VectorXd y = z - hxprime;
+  
+  
+    /**
+   * Tips/tricks : 
+   * The resulting angle phi in the y vector should be adjusted so that it is between -pi   and pi.   * The Kalman filter is expecting small angle values between the range -pi and pi. 
+   * HINT: when working in radians, you can add 2\pi2π or subtract 2\pi2π until the angle is within
+   * the desired range.
+   */
+  ///////////////////////////////////////////
+  //if ((y(1) < -M_PI) || (y(1)> M_PI)){
+  //  cout << "phi for hxprime : " << y(1) << endl;
+  //}
+  
+  while( (y(1) < -M_PI) || (y(1)> M_PI)){
+  	if(y(1) < -M_PI){
+      y(1) += 2*M_PI;
+    }
+    else{
+      y(1) -= 2*M_PI;
+    }
+  }
+  
+  
+  
 
   MatrixXd Ht = H_.transpose();
   
