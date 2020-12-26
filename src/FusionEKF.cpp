@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Eigen/Dense"
 #include "tools.h"
-#include <math.h>       /* cos */
+#include <cmath>       /* cos/sin/pi */
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
